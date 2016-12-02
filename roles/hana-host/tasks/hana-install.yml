@@ -32,4 +32,11 @@
 - name: copy global.ini
   copy: path=global.ini dest=/hana/shared/{{ sap_system_id|upper }}/global.ini
 
+
+- name: execute unattended installation
+  shell: ./hdblcm --configfile=/tmp/hana_install_{{ sap_system_id|lower}}.cfg -b --remote_execution=saphostagent >> /var/log/hana_install.log
+  args:
+    chdir: "{{ installdir }}/DATA_UNITS/HDB_SERVER_LINUX_X86_64/"
+    creates: /var/log/hana_install.log
+
 ...
