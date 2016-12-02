@@ -1,0 +1,10 @@
+---
+
+file:
+  name: "{{ item.value.mountpoint }}"
+  state: directory
+  owner: root
+  group: root
+  with_dict: "{{ logvols }}"
+
+...

@@ -1,6 +1,6 @@
 ---
 
-disk_partitioning: true
+disk_partitioning: false
 
 ntpserver: ntp.mcs.hpemea.net
 
@@ -34,5 +34,26 @@ logvols:
     vol: vg01
     mountpoint: /usr/sap
     pvs: /dev/vdb1
+
+id_user_sapadm: "30200"
+id_user_sidadm: "30210"
+id_group_shm: "30220"
+id_group_sapsys: "30200"
+
+pw_user_sapadm: "redhat"
+pw_user_sidadm: "redhat"
+
+installroot: /install
+installversion: 51051151
+
+installdir: "{{ installroot }}/{{ installversion }}"
+
+sap_system_id: "HMC"
+sap_instance: "01"
+sap_hostname: "{{ ansible_hostname }}"
+sap_hana_system_usage: "custom"
+sap_hana_components: "client,server"
+sap_hana_system_type: "Master"
+sap_hana_autoinstall: false
 
 ...

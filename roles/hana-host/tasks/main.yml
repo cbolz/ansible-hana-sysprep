@@ -9,7 +9,17 @@
 - include: ./system-tuning.yml
 
 - include: ./disk-partitioning.yml
-  when: 
+  when:
     - disk_partitioning
+
+- include: ./install_root.yml
+  when:
+    - not disk_partitioning
+
+- include: ./hana-install.yml
+
+- include: ./hostagent-install.yml
+
+- include: ./hostagent-ssl-install.yml
 
 ...
