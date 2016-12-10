@@ -40,8 +40,9 @@ id_user_sidadm: "30210"
 id_group_shm: "30220"
 id_group_sapsys: "30200"
 
-pw_user_sapadm: "redhat"
-pw_user_sidadm: "redhat"
+pw_sapadm: "Adm12356"
+pw_sidadm: "Adm12356"
+pw_systemuser: "System123"
 
 installroot: /install
 installversion: 51051151

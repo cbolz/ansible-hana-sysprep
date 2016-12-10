@@ -1,8 +1,13 @@
 ---
 
-- name: create sap directory
+- name: create usr sap directory
   file:
     path: "/usr/sap/{{ sap_system_id|upper }}"
+    state: directory
+
+- name: create system sap directory
+  file:
+    path: "{{ logvols.hana_shared.mountpoint }}/{{ sap_system_id|upper }}"
     state: directory
 
 - name: create sapsys group
@@ -13,7 +18,7 @@
     name: sapadm
     uid: "{{ id_user_sapadm }}"
     group: sapsys
-    password: "{{ pw_user_sapadm|password_hash('sha512') }}"
+    password: "{{ pw_sapadm|password_hash('sha512') }}"
 
 - name: create sap sid group
   group: name={{ sap_system_id|lower }}shm gid={{ id_group_shm }}
@@ -24,19 +29,19 @@
     uid: "{{ id_user_sidadm }}"
     group: "{{ sap_system_id|lower }}shm"
     home: "/usr/sap/{{ sap_system_id|upper }}/home"
-    password: "{{ pw_user_sidadm|password_hash('sha512') }}"
+    password: "{{ pw_sidadm|password_hash('sha512') }}"
 
 - name: copy installation answer file
-  copy: path=hana_install.cfg.j2 dest=/tmp/hana_install_{{ sap_system_id|lower}}.cfg
+  template: src=hana_install.cfg.j2 dest=/tmp/hana_install_{{ sap_system_id|lower}}.cfg
 
 - name: copy global.ini
-  copy: path=global.ini dest=/hana/shared/{{ sap_system_id|upper }}/global.ini
+  copy: src=global.ini dest=/hana/shared/{{ sap_system_id|upper }}/global.ini
 
 
 - name: execute unattended installation
   shell: ./hdblcm --configfile=/tmp/hana_install_{{ sap_system_id|lower}}.cfg -b --remote_execution=saphostagent >> /var/log/hana_install.log
   args:
     chdir: "{{ installdir }}/DATA_UNITS/HDB_SERVER_LINUX_X86_64/"
-    creates: /var/log/hana_install.log
+    creates: "/usr/sap/{{ sap_system_id|upper }}/HDB{{ sap_instance }}/exe/hdbdaemon"
 
 ...

@@ -20,7 +20,7 @@ addhosts=
 checkmnt=
 
 # Installation Path ( Default: /hana/shared )
-sapmnt={{ log_vols.hana_shared.mountpoint }}
+sapmnt={{ logvols.hana_shared.mountpoint }}
 
 # Install SSH Key ( Default: y )
 install_ssh_key=y
@@ -71,10 +71,10 @@ storage_cfg=
 internal_network=
 
 # Location of Data Volumes ( Default: ${sapmnt}/${sid}/global/hdb/data )
-datapath={{ log_vols.hana_shared.mountpoint }}/{{ sap_system_id|upper }}/global/hdb/data
+datapath={{ logvols.hana_shared.mountpoint }}/{{ sap_system_id|upper }}/global/hdb/data
 
 # Location of Log Volumes ( Default: ${sapmnt}/${sid}/global/hdb/log )
-logpath={{ log_vols.hana_shared.mountpoint }}/{{ sap_system_id|upper }}/global/hdb/log
+logpath={{ logvols.hana_shared.mountpoint }}/{{ sap_system_id|upper }}/global/hdb/log
 
 # Directory containing custom configurations
 custom_cfg=

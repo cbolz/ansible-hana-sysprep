@@ -18,8 +18,8 @@
 
 - include: ./hana-install.yml
 
-- include: ./hostagent-install.yml
+#- include: ./hostagent-install.yml
 
-- include: ./hostagent-ssl-install.yml
+#- include: ./hostagent-ssl-install.yml
 
 ...
