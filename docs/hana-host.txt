@@ -1,0 +1,108 @@
+
+The hana-host role
+
+the hana-host role is intended to run on a plain RHEL installation immediately after installing a minimal OS image.
+It has the following tasks:
+
+- register RHEL system against Satellite or RHN (tag: system-registration,osprep)
+- install all required packages for the defined HANA version (tag: packages,osprep)
+- configure/disable system services (tag: services,osprep)
+- configure system-tuning (tag:system-tuning,osprep)
+- configure SAP compliant hostname scheme (tag: set-hostname,osprep)
+- configure disk-partitioning and setup (tag: disk_partitioning) (not fully tested, use with caution)
+
+
+Variables used for hana-host-role
+
+# Debugging
+#----------
+
+You can set debuglevel for debugging with:
+
+debuglevel: 3
+
+Only active when running ansible-playbook with -vvv option. See man-page for details
+
+#  System Registration. 
+#-------------------------
+# If you have a Satellite 6 Server or RedHat Network Account, define an activation key and you can automatically register the system to the appropriate channel
+
+reg_activation_key: <activation_key>
+reg_organization_id: <org_id>
+
+# Set this variable to the DNS name of your satellite server, If unset the RHN is used for registration (Not implemented yet)
+# If this variable is set, it downloads the certificate package from Satellite 6 and installs it.
+satellite_server: <FQDN>
+
+
+# If you set force_repo_reset to true it removes all existing repos and readds the necessary correct EUS repositories
+# If set to false it adds all necessary EUS repos to the existing, without deleting existing ones
+# This is only necessary, if your activation key is not set up properly.
+force_repo_reset: [true|false]
+
+# If you use a different setup of repositories and do not use Satellite or RHN set check_repos to false and make sure you have the right repositories configured to your system
+check_repos: true
+
+
+### Configuration for SAP-Media-Check
+### ---------------------------------
+
+# This checks if your installation media is available at {{ hana_installdir }}
+# Then it reads the configuration and stores it as a fact: hana_version
+# The role also mounts the configuration directory if necessary.
+
+# If you have the rar file on an NFS-Share define the following:
+# The rest though is optional
+# NFS Share that holds the rar files
+install_nfs: "10.32.97.3:/public/sap-software"
+# directory, where Hana install binaries are needed
+installroot: /install
+# Hana Install version (RAR Archive Number)
+installversion: "51051151"
+# unrar command
+# RedHat does not provide an unrar command, so that you need to provide it externally
+# Some examples, where to get working unrar packages
+# RHEL6
+#unrar_pkg: http://apt.sw.be/redhat/el6/en/x86_64/rpmforge/RPMS/unrar-4.2.3-1.el6.rf.x86_64.rpm
+# RHEL 7:
+#unrar_pkg: https://forensics.cert.org/centos/cert/7/x86_64/unrar-5.3.0-1.el7.x86_64.rpm 
+# I prefer putting it on the server where my archives live 
+unrar_cmd: {{ installroot + "/bin/unrar" }}
+# If you have a different installation source you can just define
+# the following variable, otherwise leave as default
+hana_installdir: {{ installroot + "/" + installversion }}
+
+
+
+# Time
+#----------
+
+#Use this to configure your NTP-Server
+ntpserver: ntp.pool.org
+
+# Disk Setup
+#------------
+# This ansible script is able to configure your additional disks ready for use with hana by defining the follwoing variables
+# This can be used to configure /hana/{data,log,shared}
+# If you have setup your disks already, set disk_partioning to false
+# Use with caution not to delete you setup
+
+disk_partitioning: false
+disks:
+  <physdev1>: <volgroupname>
+  <physdev2>: <volgroupname>
+  ...
+
+logvols:
+  <name1>:
+    size: <size in G>
+    vol: <volgroupname>
+    mountpoint: <path>
+  <name2>:
+    ...
+    
+
+TODO
+====
+
+- improve ntpserver setup, maybe use a standard role here

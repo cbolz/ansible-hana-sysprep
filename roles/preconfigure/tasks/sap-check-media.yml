@@ -39,28 +39,6 @@
     owner: root
     group: root
 
-- name: install NFS packages for mounting
-  yum: state=present name=nfs-utils
-
-- name: mount installdir
-  mount:
-      src: "{{ install_nfs }}"
-      name: /tmp/install
-      fstype: nfs
-      state: mounted
-  when: not( (install_nfs is undefined) or (install_nfs is none) or (install_nfs | trim == '') )
-
-- name: extract installer
-  shell: cd {{ installroot }} && unrar x "/tmp/install/{{ installversion }}_part1.exe"
-  
-- name: mount installdir
-  mount:
-      src: "{{ install_nfs }}"
-      name: /tmp/install
-      fstype: nfs
-      state: unmounted
-  when: not( (install_nfs is undefined) or (install_nfs is none) or (install_nfs | trim == '') )
-
 # Changed Thomas Bludau (20170508)
 # Install directory could named completly different by hsr_name
 # Use only hana_installdir for installation

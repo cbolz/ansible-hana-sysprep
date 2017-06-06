@@ -47,12 +47,5 @@ logvols:
     mountpoint: /usr/sap
     pvs: /dev/vdb1
 
-# HANA Parameters
-# hsr_name: demoinstall
-
-# directory, where Hana install binaries are unpacked
-#hana_installdir: /install
-installversion: "51051151"
-
 ...
     
